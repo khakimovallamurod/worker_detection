@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qurilish Nazorati</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            light: '#fef08a',
+                            DEFAULT: '#facc15',
+                            dark: '#eab308',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigatsiya -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-hard-hat text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-800">Qurilish Nazorati</span>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-center space-x-4">
+                        <a href="#" class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Bosh sahifa</a>
+                        <a href="#" class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Xususiyatlar</a>
+                        <a href="#" class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Narxlar</a>
+                        <a href="#" class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Biz haqimizda</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Asosiy banner -->
+    <div class="relative bg-gradient-to-r from-primary-light to-primary">
+        <div class="max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
+                    <span class="block">Sun'iy Intellekt Asosida</span>
+                    <span class="block text-white">Qurilish Xavfsizligi Nazorati</span>
+                </h1>
+                <p class="mt-3 max-w-md mx-auto text-base text-gray-700 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+                    Qurilish maydonidagi xavflarni avtomatik aniqlash va tahlil qilish tizimi.
+                </p>
+                <div class="mt-10">
+                    <button id="tryItBtn" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-primary bg-white hover:bg-gray-100 transition duration-300">
+                        <i class="fas fa-play-circle mr-2"></i> Video Yuklash
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Xususiyatlar bo'limi -->
+    <div class="py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                    Tizim Xususiyatlari
+                </h2>
+                <p class="mt-4 max-w-2xl text-xl text-gray-600 mx-auto">
+                    Qurilish maydonidagi xavfsizlikni avtomatik nazorat qilish
+                </p>
+            </div>
+
+            <div class="mt-10">
+                <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+                    <div class="bg-gray-50 rounded-lg p-6 shadow-sm hover:shadow-md transition duration-300">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-md bg-primary text-white">
+                            <i class="fas fa-hard-hat text-xl"></i>
+                        </div>
+                        <div class="mt-5">
+                            <h3 class="text-lg font-medium text-gray-900">Himiyachi Kiyim Nazorati</h3>
+                            <p class="mt-2 text-base text-gray-600">
+                                Ishchilarning himiyachi kiyim (kaska, kamar) kiyganligini avtomatik tekshirish.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-lg p-6 shadow-sm hover:shadow-md transition duration-300">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-md bg-red-500 text-white">
+                            <i class="fas fa-exclamation-triangle text-xl"></i>
+                        </div>
+                        <div class="mt-5">
+                            <h3 class="text-lg font-medium text-gray-900">Xavflarni Aniqlash</h3>
+                            <p class="mt-2 text-base text-gray-600">
+                                Qurilish maydonidagi xavfli holatlarni (yiqilish, qulash, yong'in) aniqlash.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-lg p-6 shadow-sm hover:shadow-md transition duration-300">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-md bg-green-500 text-white">
+                            <i class="fas fa-file-pdf text-xl"></i>
+                        </div>
+                        <div class="mt-5">
+                            <h3 class="text-lg font-medium text-gray-900">Avtomatik Hisobot</h3>
+                            <p class="mt-2 text-base text-gray-600">
+                                Tahlil natijalari asosida avtomatik hisobot tuzish va yuklab olish.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Yuklash modali -->
+    <div id="uploadModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-primary-light sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fas fa-cloud-upload-alt text-primary"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                Video Yuklash
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    Qurilish maydonidan video yuklang (MP4, MOV, AVI, maksimum 500MB)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <div id="dropZone" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-primary transition duration-300">
+                            <div class="space-y-1 text-center">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <div class="flex text-sm text-gray-600 justify-center">
+                                    <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-primary hover:text-primary-dark focus-within:outline-none">
+                                        <span>Video tanlang</span>
+                                        <input id="file-upload" name="file" type="file" class="sr-only" accept="video/mp4,video/quicktime,video/x-msvideo">
+                                    </label>
+                                    <p class="pl-1">yoki sudrab tashlang</p>
+                                </div>
+                                <p class="text-xs text-gray-500">
+                                    MP4, MOV, AVI, maksimum 500MB
+                                </p>
+                            </div>
+                        </div>
+                        <div id="fileInfo" class="hidden mt-2 text-sm text-gray-700">
+                            <i class="fas fa-file-video mr-2 text-primary"></i>
+                            <span id="fileName"></span>
+                            <span id="fileSize" class="text-gray-500 ml-2"></span>
+                        </div>
+                        <div id="uploadProgress" class="hidden mt-4">
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div id="progressBar" class="bg-primary h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                            <p id="progressText" class="text-sm text-gray-500 mt-2 text-center">Yuklanmoqda: <span class="font-medium">0%</span></p>
+                        </div>
+                        <div id="errorMessage" class="hidden mt-4 text-sm text-red-500"></div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button id="analyzeBtn" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-primary-dark focus:outline-none sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50" disabled>
+                        <i class="fas fa-spinner fa-spin mr-2 hidden" id="analyzeSpinner"></i>
+                        Tahlil Qilish
+                    </button>
+                    <button id="cancelUploadBtn" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Bekor Qilish
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ish jarayoni modali -->
+    <div id="processingModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-primary-light sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fas fa-cog fa-spin text-primary"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                Video Tahlil Qilinmoqda
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    Video tahlil qilinmoqda, iltimos kuting... Bu bir necha daqiqa vaqt olishi mumkin.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div id="processingBar" class="bg-primary h-2.5 rounded-full animate-pulse" style="width: 45%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Tizim</h3>
+                    <ul class="mt-4 space-y-4">
+                        <li><a href="#" class="text-base text-gray-300 hover:text-white">Xususiyatlar</a></li>
+                        <li><a href="#" class="text-base text-gray-300 hover:text-white">Narxlar</a></li>
+                        <li><a href="#" class="text-base text-gray-300 hover:text-white">API</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Resurslar</h3>
+                    <ul class="mt-4 space-y-4">
+                        <li><a href="#" class="text-base text-gray-300 hover:text-white">Qo'llanma</a></li>
+                        <li><a href="#" class="text-base text-gray-300 hover:text-white">Xavfsizlik standartlari</a></li>
+                        <li><a href="#" class="text-base text-gray-300 hover:text-white">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Kompaniya</h3>
+                    <ul class="mt-4 space-y-4">
+                        <li><a href="#" class="text-base text-gray-300 hover:text-white">Biz haqimizda</a></li>
+                        <li><a href="#" class="text-base text-gray-300 hover:text-white">Vakansiyalar</a></li>
+                        <li><a href="#" class="text-base text-gray-300 hover:text-white">Kontaktlar</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Bog'lanish</h3>
+                    <ul class="mt-4 space-y-4">
+                        <li><a href="#" class="text-base text-gray-300 hover:text-white">Telegram</a></li>
+                        <li><a href="#" class="text-base text-gray-300 hover:text-white">Facebook</a></li>
+                        <li><a href="#" class="text-base text-gray-300 hover:text-white">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-700 pt-8 md:flex md:items-center md:justify-between">
+                <div class="flex space-x-6 md:order-2">
+                    <a href="#" class="text-gray-400 hover:text-gray-300">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-300">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-gray-300">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+                <p class="mt-8 text-base text-gray-400 md:mt-0 md:order-1">
+                    &copy; 2023 Qurilish Nazorati. Barcha huquqlar himoyalangan.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // DOM elements
+    const tryItBtn = document.getElementById('tryItBtn');
+    const uploadModal = document.getElementById('uploadModal');
+    const processingModal = document.getElementById('processingModal');
+    const cancelUploadBtn = document.getElementById('cancelUploadBtn');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const fileUpload = document.getElementById('file-upload');
+    const dropZone = document.getElementById('dropZone');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const uploadProgress = document.getElementById('uploadProgress');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const errorMessage = document.getElementById('errorMessage');
+    const analyzeSpinner = document.getElementById('analyzeSpinner');
+
+    // Variables
+    let selectedFile = null;
+    let uploadInProgress = false;
+
+    // Event listeners
+    tryItBtn.addEventListener('click', () => {
+        uploadModal.classList.remove('hidden');
+    });
+
+    cancelUploadBtn.addEventListener('click', () => {
+        if (!uploadInProgress) {
+            uploadModal.classList.add('hidden');
+            resetUploadForm();
+        }
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === uploadModal || event.target === processingModal) {
+            if (!uploadInProgress) {
+                uploadModal.classList.add('hidden');
+                processingModal.classList.add('hidden');
+                resetUploadForm();
+            }
+        }
+    });
+
+    fileUpload.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFileSelection(e.target.files[0]);
+        }
+    });
+
+    // Drag and drop handlers
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight() {
+        dropZone.classList.add('border-primary', 'bg-primary-light');
+    }
+
+    function unhighlight() {
+        dropZone.classList.remove('border-primary', 'bg-primary-light');
+    }
+
+    dropZone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const file = dt.files[0];
+        if (file && file.type.startsWith('video/')) {
+            handleFileSelection(file);
+            // Update file input
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileUpload.files = dataTransfer.files;
+        } else {
+            showError('Iltimos, video fayl tanlang (MP4, MOV, AVI)');
+        }
+    });
+
+    // File handling
+    function handleFileSelection(file) {
+        if (!file.type.startsWith('video/')) {
+            showError('Iltimos, video fayl tanlang (MP4, MOV, AVI)');
+            return;
+        }
+
+        if (file.size > 500 * 1024 * 1024) {
+            showError('Fayl hajmi 500MB dan oshmasligi kerak');
+            return;
+        }
+
+        selectedFile = file;
+        analyzeBtn.disabled = false;
+        fileInfo.classList.remove('hidden');
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        errorMessage.classList.add('hidden');
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bayt';
+        const k = 1024;
+        const sizes = ['Bayt', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.classList.remove('hidden');
+        setTimeout(() => {
+            errorMessage.classList.add('hidden');
+        }, 5000);
+    }
+
+    function resetUploadForm() {
+        selectedFile = null;
+        fileUpload.value = '';
+        analyzeBtn.disabled = true;
+        fileInfo.classList.add('hidden');
+        uploadProgress.classList.add('hidden');
+        progressBar.style.width = '0%';
+        progressText.innerHTML = 'Yuklanmoqda: <span class="font-medium">0%</span>';
+        errorMessage.classList.add('hidden');
+        dropZone.classList.remove('border-primary', 'bg-primary-light');
+        analyzeSpinner.classList.add('hidden');
+        uploadInProgress = false;
+    }
+
+    // Analyze button handler
+    analyzeBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    
+    if (!selectedFile) {
+        showError('Iltimos, avval video faylni tanlang!');
+        return;
+    }
+
+    uploadInProgress = true;
+    analyzeBtn.disabled = true;
+    analyzeSpinner.classList.remove('hidden');
+    uploadProgress.classList.remove('hidden');
+    
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    
+    try {
+        const response = await fetch('http://127.0.0.1:8000/upload', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.error || 'Upload failed');
+        }
+        
+        processingModal.classList.remove('hidden');
+        uploadModal.classList.add('hidden');
+        
+        // Start checking status
+        checkProcessingStatus(data.filename);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        showError(error.message || 'Video tahlili jarayonida xato yuz berdi');
+        analyzeBtn.disabled = false;
+        analyzeSpinner.classList.add('hidden');
+        uploadInProgress = false;
+    }
+});
+
+function checkProcessingStatus(filename) {
+    const checkInterval = 2000; // 2 sekundda bir tekshir
+    const timeout = 300000; // 5 daqiqa timeout
+    
+    const startTime = Date.now();
+
+    const checkStatus = async () => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/status/${filename}`);
+            const data = await response.json();
+            
+            if (data.status === 'completed') {
+                // Tahlil tugadi
+                progressBar.style.width = '100%';
+                progressText.textContent = 'Tahlil yakunlandi!';
+
+                // Sahifani yangilamasdan natijani chiqaramiz
+                const videoContainer = document.getElementById('video-container');
+                videoContainer.innerHTML = `
+                    <video src="http://127.0.0.1:8000/results/${filename}" controls autoplay style="width: 100%;"></video>
+                `;
+
+                processingModal.classList.add('hidden');
+                resultModal.classList.remove('hidden');
+            } else {
+                // Progress barni yangilash
+                const currentProgress = parseInt(progressBar.style.width) || 0;
+                const newProgress = Math.min(currentProgress + 5, 90);
+                progressBar.style.width = `${newProgress}%`;
+                
+                // Agar timeoutga yetmagan bo'lsa, yana tekshirish
+                if (Date.now() - startTime < timeout) {
+                    setTimeout(checkStatus, checkInterval);
+                } else {
+                    showError('Jarayon vaqt tugadi.');
+                    processingModal.classList.add('hidden');
+                }
+            }
+        } catch (error) {
+            console.error('Status check error:', error);
+            showError('Statusni tekshirishda xato yuz berdi.');
+            processingModal.classList.add('hidden');
+        }
+    };
+    
+    checkStatus();
+}
+    });
+   </script>
+</body>
+</html>

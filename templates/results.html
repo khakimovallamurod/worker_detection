@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tahlil Natijalari</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigatsiya -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-hard-hat text-yellow-500 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-800">Qurilish Nazorati</span>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-center space-x-4">
+                        <a href="/" class="text-gray-700 hover:text-yellow-500 px-3 py-2 rounded-md text-sm font-medium">Bosh sahifa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Natijalar bo'limi -->
+    <div class="py-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                    Tahlil Natijalari
+                </h2>
+                <p class="mt-4 max-w-2xl text-xl text-gray-600 mx-auto">
+                    Video tahlili muvaffaqiyatli yakunlandi
+                </p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="md:flex">
+                    <div class="md:flex-shrink-0 md:w-full">
+                        <div class="relative pb-[56.25%] bg-black">
+                            <video id="resultVideo" class="absolute inset-0 w-full h-full object-cover" controls autoplay>
+                                <source src="/results/{{ video_filename }}" type="video/mp4">
+                                Sizning brauzeringiz video formatini qo'llab-quvvatlamaydi.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8">
+                    <div class="uppercase tracking-wide text-sm text-yellow-500 font-semibold">Tahlil xulosasi</div>
+                    <div class="mt-4 space-y-4">
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900">Aniqlangan xavflar</h3>
+                            <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 h-5 w-5 text-red-500 mt-0.5">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <p class="ml-3 text-sm text-gray-600">2 ta ishchi himiyachi kiyimsiz</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 h-5 w-5 text-red-500 mt-0.5">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <p class="ml-3 text-sm text-gray-600">Xavfsizlanmagan narvon (00:02:15)</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 h-5 w-5 text-yellow-500 mt-0.5">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    </div>
+                                    <p class="ml-3 text-sm text-gray-600">Yiqilish xavfi (00:05:42)</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 h-5 w-5 text-green-500 mt-0.5">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <p class="ml-3 text-sm text-gray-600">To'g'ri himoya vositalari mavjud</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-8 flex space-x-4">
+                            <button onclick="downloadReport()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none">
+                                <i class="fas fa-download mr-2"></i> Hisobotni yuklab olish
+                            </button>
+                            <button onclick="shareResults()" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+                                <i class="fas fa-share-alt mr-2"></i> Natijalarni ulashish
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadReport() {
+            alert("Hisobot yuklab olinmoqda...");
+            // Bu yerda haqiqiy yuklab olish logikasi bo'lishi kerak
+        }
+
+        function shareResults() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Qurilish maydoni tahlil natijalari',
+                    text: 'Video tahlili natijalarini ko\'ring',
+                    url: window.location.href,
+                })
+                .catch(error => console.log('Ulashishda xato:', error));
+            } else {
+                alert("Brauzeringiz ulashish funksiyasini qo'llab-quvvatlamaydi. Havolani qo'lda nusxalang.");
+            }
+        }
+
+        // Videoni avto-play qilish
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('resultVideo');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            // Video yuklanishini kuzatish
+            video.onloadeddata = function() {
+                loadingIndicator.classList.add('hidden');
+            };
+            
+            video.onerror = function() {
+                alert('Video yuklab bo‘lmadi. Iltimos, qayta urinib ko‘ring.');
+                window.location.href = '/';
+            };
+            
+            // Agar video mavjud bo'lmasa
+            if (!video.getAttribute('src')) {
+                window.location.href = '/';
+            }
+        });
+    </script>
+</body>
+</html>
