@@ -51,7 +51,7 @@ pip install -r requirements.txt
 ### Telegram bot sozlamalari:
 
 1. [@BotFather](https://t.me/BotFather) orqali bot yarating va `bot_token` oling.
-2. Telegram'dan `chat_id` ni aniqlang (buni olishda yordam kerak bo‘lsa, so‘rashingiz mumkin).
+2. Telegram'dan `chat_id` ni aniqlang.
 
 ### Dasturni ishga tushirish:
 
