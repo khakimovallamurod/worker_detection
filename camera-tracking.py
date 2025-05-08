@@ -2,12 +2,14 @@ import numpy as np
 import cv2
 import supervision as sv
 from ultralytics import YOLO
-from tqdm import tqdm
 from collections import defaultdict, deque
 from supervision.draw.color import Color
-import sys
+from telegram import Bot
+import io
+from config import get_token, get_chat_id
+import asyncio
 
-# Ranglar classlar bo'yicha
+
 CLASS_COLORS = {
     'Helmet': Color.GREEN,
     'No-Helmet': Color.RED,
@@ -17,9 +19,10 @@ CLASS_COLORS = {
     'Person-Fall': Color.YELLOW,
     'Fire': Color.RED,
     'Smoke': Color.BLACK,
+    'fire': Color.RED,
+    'smoke': Color.BLACK,
 }
 
-# Annotatorlar
 bounding_box_annotator = sv.BoxAnnotator()
 label_annotator = sv.LabelAnnotator(text_position=sv.Position.TOP_CENTER)
 
@@ -44,18 +47,26 @@ def draw_corner_lines(frame, x1, y1, x2, y2, color, thickness):
     return frame
 
 def get_class_name(model, class_id):
-    return model.model.names[class_id]
+    return model.model.names[int(class_id)]
 
 def count_people(detections, model):
     return sum(1 for cid in detections.class_id if get_class_name(model, cid) == 'Person')
 
-def annotate_frame(frame, model, detections):
+def annotate_frame(frame, model1, model2, model3, detections):
     annotated_frame = frame.copy()
     labels = []
 
     for xyxy, tracker_id, class_id in zip(detections.xyxy, detections.tracker_id, detections.class_id):
         x1, y1, x2, y2 = map(int, xyxy)
-        class_name = get_class_name(model, class_id)
+        class_id = int(class_id)
+
+        class_name = (
+            model1.model.names.get(class_id)
+            or model2.model.names.get(class_id)
+            or model3.model.names.get(class_id)
+            or f"ID:{class_id}"
+        )
+
         color = CLASS_COLORS.get(class_name, Color.WHITE)
         labels.append(class_name)
 
@@ -73,8 +84,8 @@ def annotate_frame(frame, model, detections):
                 scene=annotated_frame,
                 detections=detection_box
             )
-
-    return label_annotator.annotate(scene=annotated_frame, detections=detections, labels=labels), count_people(detections, model)
+    annotated_frame = label_annotator.annotate(scene=annotated_frame, detections=detections, labels=labels)
+    return annotated_frame, count_people(detections, model2)
 
 def compute_iou(box1, box2):
     x1, y1, x2, y2 = box1
@@ -89,7 +100,7 @@ def compute_iou(box1, box2):
     union_area = box1_area + box2_area - inter_area
     return inter_area / union_area if union_area > 0 else 0
 
-def merge_detections(det1, model1, det2, model2):
+def merge_detections(det1, model1, det2, model2, det3, model3):
     final_xyxy = []
     final_conf = []
     final_class_id = []
@@ -98,7 +109,6 @@ def merge_detections(det1, model1, det2, model2):
     priority_classes = ["Helmet", "No-Helmet"]
     other_classes = ["Vest", "No-Vest", "Person-Fall", "Fire", "Smoke"]
 
-    # Faqat Person klassini birinchi modeldan olish
     for xyxy, conf, cls in zip(det1.xyxy, det1.confidence, det1.class_id):
         if model1.model.names[cls] == "Person":
             final_xyxy.append(xyxy)
@@ -106,7 +116,6 @@ def merge_detections(det1, model1, det2, model2):
             final_class_id.append(cls)
             final_tracker_id.append(None)
 
-    # Priority classlar (Helmet, No-Helmet)
     for cls_name in priority_classes:
         detections_by_pos = []
 
@@ -116,6 +125,10 @@ def merge_detections(det1, model1, det2, model2):
 
         for xyxy, conf, cls in zip(det2.xyxy, det2.confidence, det2.class_id):
             if model2.model.names[cls] == cls_name:
+                detections_by_pos.append((xyxy, conf, cls))
+
+        for xyxy, conf, cls in zip(det3.xyxy, det3.confidence, det3.class_id):
+            if model3.model.names[cls] == cls_name:
                 detections_by_pos.append((xyxy, conf, cls))
 
         kept = []
@@ -136,12 +149,19 @@ def merge_detections(det1, model1, det2, model2):
             final_class_id.append(cls)
             final_tracker_id.append(None)
 
-    # Other classlar (Vest, Fire, etc.)
     for cls_name in other_classes:
         detections_by_pos = []
 
+        for xyxy, conf, cls in zip(det1.xyxy, det1.confidence, det1.class_id):
+            if model1.model.names[cls] == cls_name:
+                detections_by_pos.append((xyxy, conf, cls))
+
         for xyxy, conf, cls in zip(det2.xyxy, det2.confidence, det2.class_id):
             if model2.model.names[cls] == cls_name:
+                detections_by_pos.append((xyxy, conf, cls))
+
+        for xyxy, conf, cls in zip(det3.xyxy, det3.confidence, det3.class_id):
+            if model3.model.names[cls] == cls_name:
                 detections_by_pos.append((xyxy, conf, cls))
 
         kept = []
@@ -172,15 +192,24 @@ def merge_detections(det1, model1, det2, model2):
         tracker_id=np.array(final_tracker_id)
     )
 
-
-def main(camera_index, output_path):
+async def send_to_telegram(bot, chat_id, frame):
+ 
+    _, buffer = cv2.imencode('.jpg', frame)
+    img_byte = buffer.tobytes()
+    await bot.send_photo(chat_id=chat_id, photo=img_byte)
+sent_tracker_ids = set()
+async def main(camera_index, output_path, bot_token, chat_id):
     MODEL_NAME = "models/person20k.pt"
-    MODEL_NAME_TWO = "models/buildin_gmodels35k.pt"
-    CONFIDENCE_THRESHOLD = 0.3
+    MODEL_NAME_TWO = "models/build25k.pt"
+    MODEL_NAME_THREE = "models/fire-smoke-model.pt" 
+    CONFIDENCE_THRESHOLD = 0.5
     NMS_IOU_THRESHOLD = 0.4
 
     model1 = load_model(MODEL_NAME)
     model2 = load_model(MODEL_NAME_TWO)
+    model3 = load_model(MODEL_NAME_THREE)  
+
+    bot = Bot(token=bot_token)
 
     cap = cv2.VideoCapture(camera_index)
 
@@ -196,7 +225,6 @@ def main(camera_index, output_path):
         print("Frame o'lchamlari noto'g'ri. Chiqyapti...")
         return
 
-    # YANGI - VideoWriter
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     writer = cv2.VideoWriter(output_path, fourcc, fps, (frame_width, frame_height))
 
@@ -210,27 +238,40 @@ def main(camera_index, output_path):
 
             result1 = model1(frame, imgsz=(640, 640), verbose=False)[0]
             result2 = model2(frame, imgsz=(640, 640), verbose=False)[0]
+            result3 = model3(frame, imgsz=(640, 640), verbose=False)[0]  
 
             detections1 = sv.Detections.from_ultralytics(result1)
             detections2 = sv.Detections.from_ultralytics(result2)
+            detections3 = sv.Detections.from_ultralytics(result3) 
 
             detections1 = detections1[detections1.confidence > CONFIDENCE_THRESHOLD]
             detections2 = detections2[detections2.confidence > CONFIDENCE_THRESHOLD]
+            detections3 = detections3[detections3.confidence > CONFIDENCE_THRESHOLD]
 
-            merged_detections = merge_detections(detections1, model1, detections2, model2)
+            merged_detections = merge_detections(detections1, model1, detections2, model2, detections3, model3)
             merged_detections = merged_detections.with_nms(NMS_IOU_THRESHOLD)
             merged_detections = tracker.update_with_detections(merged_detections)
 
-            annotated_frame, person_count = annotate_frame(frame, model2, merged_detections)
+            annotated_frame, person_count = annotate_frame(frame, model1, model2, model3, merged_detections)
 
+            for class_id, tracker_id in zip(merged_detections.class_id, merged_detections.tracker_id):
+                if tracker_id is None:
+                    continue  
+                label = (
+                    model1.model.names.get(class_id) or
+                    model2.model.names.get(class_id) or
+                    model3.model.names.get(class_id)
+                )
+                if label in ["Fire", "Smoke", "fire", "smoke"] and tracker_id not in sent_tracker_ids:
+                    print(f"Detected: {label}, Tracker ID: {tracker_id}")
+                    await send_to_telegram(bot, chat_id, annotated_frame)
+                    sent_tracker_ids.add(tracker_id)
+                    break
+                
             cv2.putText(annotated_frame, f"People: {person_count}", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
 
             cv2.imshow("Construction Monitoring", annotated_frame)
             cv2.namedWindow("Construction Monitoring", cv2.WINDOW_FULLSCREEN)
-
-
-            # Sink o'rniga writer
-            # writer.write(annotated_frame)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
@@ -241,4 +282,6 @@ def main(camera_index, output_path):
         cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    main(6, 'output.mp4')  # 0 — default camera
+    token = get_token()
+    chat_id = get_chat_id()
+    asyncio.run(main(0, 'output.mp4', token, chat_id)) 
