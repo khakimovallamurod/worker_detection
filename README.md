@@ -1,4 +1,3 @@
-````markdown
 # 🏗️ Qurilish maydonini kuzatuvchi tizim (YOLO + Telegram ogohlantirishlar)
 
 Bu loyiha **real vaqtli sun’iy intellekt asosida ishlovchi kuzatuv tizimi** bo‘lib, quyidagilarni amalga oshiradi:
