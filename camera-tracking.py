@@ -284,4 +284,9 @@ async def main(camera_index, output_path, bot_token, chat_id):
 if __name__ == "__main__":
     token = get_token()
     chat_id = get_chat_id()
-    asyncio.run(main(0, 'output.mp4', token, chat_id)) 
+    output_path = 'output.mp4'
+    camera_idx = 0
+    asyncio.run(main(camera_index = camera_idx, 
+                     output_path = output_path, 
+                     bot_token = token, 
+                     chat_id = chat_id)) 
