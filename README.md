@@ -57,7 +57,14 @@ pip install -r requirements.txt
 
 ```python
 import asyncio
-asyncio.run(main("test_video.mp4", "output.mp4", "YOUR_BOT_TOKEN", "YOUR_CHAT_ID"))
+from camera-tracking import main  
+
+bot_token = 'YOUR_TELEGRAM_BOT_TOKEN'
+chat_id = 'YOUR_TELEGRAM_CHAT_ID'
+video_path = 'input_video.mp4'
+output_path = 'output_annotated.mp4'
+
+asyncio.run(main(video_path, output_path, bot_token, chat_id))
 ```
 
 ---
@@ -68,3 +75,34 @@ asyncio.run(main("test_video.mp4", "output.mp4", "YOUR_BOT_TOKEN", "YOUR_CHAT_ID
 * Video tugaguncha yoki `q` tugmasi bosilmaguncha oynada real vaqtli monitoring davom etadi.
 
 ---
+
+---
+
+## 🧪 Testing with Webcam (Optional)
+
+To test with a real-time camera feed, replace this line:
+
+```python
+cap = cv2.VideoCapture(video_path)
+```
+
+with:
+
+```python
+cap = cv2.VideoCapture(0)  # or other camera index
+```
+
+---
+
+---
+
+## 🛠 Requirements
+
+* Python 3.8+
+* OpenCV
+* Ultralytics (YOLOv8)
+* Supervision
+* Python-Telegram-Bot
+
+---
+
