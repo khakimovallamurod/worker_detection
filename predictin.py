@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 import cv2
 
-model = YOLO("train7/weights/best.pt")
+model = YOLO("models/building_models35k.pt")
 
 def image_prediction(image_path):
     image = cv2.imread(image_path)
@@ -20,5 +20,5 @@ def image_prediction(image_path):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-image_prediction("test/ppe_test/images/image_181_jpg.rf.5c76357ca11f55470a77dadd458d2545.jpg")
+image_prediction("tests/fire-test01.png")
 # image_prediction('image copy.png')
