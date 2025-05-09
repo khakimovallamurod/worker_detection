@@ -285,11 +285,4 @@ async def main(video_path, output_path, bot_token, chat_id):
         cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    token = get_token()
-    chat_id = get_chat_id()
-    output_path = 'output.mp4'
-    video_path = "test_video.mp4"
-    asyncio.run(main(video_path = video_path, 
-                     output_path = output_path, 
-                     bot_token = token, 
-                     chat_id = chat_id)) 
+    main('video.mp4', 'output.mp4')
