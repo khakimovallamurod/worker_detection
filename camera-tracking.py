@@ -8,6 +8,7 @@ from telegram import Bot
 import io
 from config import get_token, get_chat_id
 import asyncio
+from supervision.annotators.core import LabelAnnotator
 
 
 CLASS_COLORS = {
@@ -24,7 +25,6 @@ CLASS_COLORS = {
 }
 
 bounding_box_annotator = sv.BoxAnnotator()
-label_annotator = sv.LabelAnnotator(text_position=sv.Position.TOP_CENTER)
 
 def load_model(model_path):
     return YOLO(model_path)
@@ -52,31 +52,50 @@ def get_class_name(model, class_id):
 def count_people(detections, model):
     return sum(1 for cid in detections.class_id if get_class_name(model, cid) == 'Person')
 
+top_left_label_annotator = LabelAnnotator(
+    text_scale=0.5,
+    text_thickness=1,
+    text_color=Color.BLACK,
+    text_padding=5, 
+    text_position=sv.Position.TOP_LEFT 
+)
+
+top_center_label_annotator = LabelAnnotator(
+    text_scale=0.5,
+    text_thickness=1,
+    text_color=Color.BLACK,
+    text_padding=5,
+    text_position=sv.Position.TOP_CENTER
+)
+
 def annotate_frame(frame, model1, model2, model3, detections):
     annotated_frame = frame.copy()
-    labels = []
+    
+    no_vest_indices = []
+    other_object_indices = []
+    person_indices = []
 
-    for xyxy, tracker_id, class_id in zip(detections.xyxy, detections.tracker_id, detections.class_id):
+    for i, (xyxy, tracker_id, class_id) in enumerate(zip(detections.xyxy, detections.tracker_id, detections.class_id)):
         x1, y1, x2, y2 = map(int, xyxy)
-        class_id = int(class_id)
+        class_id_int = int(class_id)
 
         class_name = (
-            model1.model.names.get(class_id)
-            or model2.model.names.get(class_id)
-            or model3.model.names.get(class_id)
-            or f"ID:{class_id}"
+            model1.model.names.get(class_id_int)
+            or model2.model.names.get(class_id_int)
+            or model3.model.names.get(class_id_int)
+            or f"ID:{class_id_int}"
         )
-
+        
         color = CLASS_COLORS.get(class_name, Color.WHITE)
-        labels.append(class_name)
 
         if class_name == 'Person':
             annotated_frame = draw_corner_lines(annotated_frame, x1, y1, x2, y2, color.as_bgr(), 2)
+            person_indices.append(i)
         else:
             detection_box = sv.Detections(
                 xyxy=np.array([[x1, y1, x2, y2]]),
-                confidence=np.array([1.0]),
-                class_id=np.array([class_id]),
+                confidence=np.array([1.0]), 
+                class_id=np.array([class_id_int]),
                 tracker_id=np.array([tracker_id])
             )
             detection_box.color = [color]
@@ -84,7 +103,42 @@ def annotate_frame(frame, model1, model2, model3, detections):
                 scene=annotated_frame,
                 detections=detection_box
             )
-    annotated_frame = label_annotator.annotate(scene=annotated_frame, detections=detections, labels=labels)
+            if class_name == 'No-Vest':
+                no_vest_indices.append(i)
+            else:
+                other_object_indices.append(i)
+
+    if no_vest_indices:
+        no_vest_filtered_detections = detections[no_vest_indices]
+        no_vest_labels = [
+            (model1.model.names.get(int(class_id_val))
+            or model2.model.names.get(int(class_id_val))
+            or model3.model.names.get(int(class_id_val))
+            or f"ID:{int(class_id_val)}")
+            for class_id_val in no_vest_filtered_detections.class_id
+        ]
+        annotated_frame = top_left_label_annotator.annotate(
+            scene=annotated_frame, 
+            detections=no_vest_filtered_detections, 
+            labels=no_vest_labels
+        )
+    
+    all_top_center_indices = person_indices + other_object_indices
+    if all_top_center_indices:
+        top_center_filtered_detections = detections[all_top_center_indices]
+        top_center_labels = [
+            (model1.model.names.get(int(class_id_val))
+            or model2.model.names.get(int(class_id_val))
+            or model3.model.names.get(int(class_id_val))
+            or f"ID:{int(class_id_val)}")
+            for class_id_val in top_center_filtered_detections.class_id
+        ]
+        annotated_frame = top_center_label_annotator.annotate(
+            scene=annotated_frame, 
+            detections=top_center_filtered_detections, 
+            labels=top_center_labels
+        )
+
     return annotated_frame, count_people(detections, model2)
 
 def compute_iou(box1, box2):
