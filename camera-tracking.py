@@ -262,7 +262,7 @@ async def main(camera_index, output_path, bot_token, chat_id):
                     model2.model.names.get(class_id) or
                     model3.model.names.get(class_id)
                 )
-                if label in ["Fire", "Smoke", "fire", "smoke"] and tracker_id not in sent_tracker_ids:
+                if label.lower() in ["fire", "smoke", 'no-helmet', 'no-helmet'] and tracker_id not in sent_tracker_ids:
                     print(f"Detected: {label}, Tracker ID: {tracker_id}")
                     await send_to_telegram(bot, chat_id, annotated_frame)
                     sent_tracker_ids.add(tracker_id)
@@ -285,7 +285,7 @@ if __name__ == "__main__":
     token = get_token()
     chat_id = get_chat_id()
     output_path = 'output.mp4'
-    camera_idx = 0
+    camera_idx = 2
     asyncio.run(main(camera_index = camera_idx, 
                      output_path = output_path, 
                      bot_token = token, 
