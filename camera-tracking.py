@@ -200,8 +200,8 @@ async def send_to_telegram(bot, chat_id, frame):
 sent_tracker_ids = set()
 async def main(camera_index, output_path, bot_token, chat_id):
     MODEL_NAME = "models/person20k.pt"
-    MODEL_NAME_TWO = "models/build25k.pt"
-    MODEL_NAME_THREE = "models/fire-smoke-model.pt" 
+    MODEL_NAME_TWO = "models/building_models35k.pt"
+    MODEL_NAME_THREE = "models/fire_smoke_model.pt" 
     CONFIDENCE_THRESHOLD = 0.5
     NMS_IOU_THRESHOLD = 0.4
 
